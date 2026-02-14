@@ -749,6 +749,7 @@ function startTeaseSequence() {
       btn.className = "tease-btn";
       btn.textContent = s.text;
       btn.style.transition = "none";
+      btn.style.animation = "fadeInUp 0.5s ease, pulse 1.5s ease-in-out infinite";
 
       function runAway() {
         const maxX = window.innerWidth - 250;
@@ -778,7 +779,7 @@ function startTeaseSequence() {
           showStep();
         });
         content.appendChild(helpBtn);
-      }, 45000);
+      }, 10000);
     } else {
       // Text IS the button
       const btn = document.createElement("button");
