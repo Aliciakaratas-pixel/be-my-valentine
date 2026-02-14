@@ -28,12 +28,12 @@ function playMusic() {
     loadTrack(0);
     musicStarted = true;
   }
-  audio.play().catch(() => {});
+  audio.play().catch(() => { });
 }
 
 audio.addEventListener("ended", () => {
   loadTrack(currentTrack + 1);
-  audio.play().catch(() => {});
+  audio.play().catch(() => { });
 });
 
 document.getElementById("music-toggle").addEventListener("click", () => {
@@ -48,7 +48,7 @@ document.getElementById("music-toggle").addEventListener("click", () => {
 
 document.getElementById("music-skip").addEventListener("click", () => {
   loadTrack(currentTrack + 1);
-  audio.play().catch(() => {});
+  audio.play().catch(() => { });
   document.getElementById("music-toggle").textContent = "⏸️";
 });
 
@@ -119,7 +119,6 @@ function showToast(message) {
 
 // ========== YES BUTTON → CELEBRATE ==========
 btnYes.addEventListener("click", () => {
-  // Start music
   if (!musicStarted) {
     playMusic();
     document.getElementById("music-toggle").textContent = "⏸️";
@@ -127,10 +126,10 @@ btnYes.addEventListener("click", () => {
   showScreen("screen-celebrate");
   startHeartRain();
 
-  // Show adventure button after animations
   setTimeout(() => {
-    document.getElementById("btn-start-adventure").style.display = "inline-block";
-    document.getElementById("btn-start-adventure").style.animation = "fadeInUp 0.6s ease, pulse 1.5s ease-in-out infinite";
+    const btn = document.getElementById("btn-start-adventure");
+    btn.style.display = "inline-block";
+    btn.style.animation = "fadeInUp 0.6s ease, pulse 1.5s ease-in-out infinite";
   }, 2800);
 });
 
@@ -173,7 +172,6 @@ function initTask1() {
   wordBank.innerHTML = "";
   feedback.textContent = "";
 
-  // Shuffle words
   const shuffled = [...puzzleSolution].sort(() => Math.random() - 0.5);
 
   shuffled.forEach((word) => {
@@ -181,14 +179,12 @@ function initTask1() {
     wordBank.appendChild(el);
   });
 
-  // Click to move between bank and dropzone
   function createWordEl(word) {
     const el = document.createElement("div");
     el.className = "puzzle-word";
     el.textContent = word;
     el.draggable = true;
 
-    // Click to toggle placement
     el.addEventListener("click", () => {
       if (el.parentElement === wordBank) {
         dropZone.appendChild(el);
@@ -198,7 +194,6 @@ function initTask1() {
       updateCheckBtn();
     });
 
-    // Drag and drop
     el.addEventListener("dragstart", (e) => {
       e.dataTransfer.setData("text/plain", "");
       el.classList.add("dragging");
@@ -233,10 +228,10 @@ function initTask1() {
     checkBtn.disabled = placed !== puzzleSolution.length;
   }
 
-  checkBtn.addEventListener("click", () => {
+  checkBtn.onclick = () => {
     const words = [...dropZone.querySelectorAll(".puzzle-word")].map((el) => el.textContent);
     if (words.join(" ") === puzzleSolution.join(" ")) {
-      feedback.textContent = "🎉 Perfect! You revealed the love letter!";
+      feedback.textContent = "⭐ Perfect! You revealed the love letter! 💗";
       feedback.style.color = "#10b981";
       setTimeout(() => goToTask(2), 2000);
     } else {
@@ -244,11 +239,11 @@ function initTask1() {
       feedback.style.color = "#ef4444";
       setTimeout(() => (feedback.textContent = ""), 2000);
     }
-  });
+  };
 }
 
-// ========== TASK 2: MEMORY MATCH ==========
-const memoryEmojis = ["🌹", "💝", "🍫", "💌", "🧸", "💍"];
+// ========== TASK 2: MEMORY MATCH (bigger grid – 8 pairs = 16 tiles) ==========
+const memoryEmojis = ["🌹", "💝", "🍫", "💌", "🧸", "💍", "🦋", "🌸"];
 
 function initTask2() {
   const grid = document.getElementById("memory-grid");
@@ -261,7 +256,7 @@ function initTask2() {
   let matched = 0;
   let locked = false;
 
-  pairs.forEach((emoji, i) => {
+  pairs.forEach((emoji) => {
     const card = document.createElement("div");
     card.className = "memory-card";
     card.dataset.emoji = emoji;
@@ -285,7 +280,7 @@ function initTask2() {
           locked = false;
 
           if (matched === memoryEmojis.length) {
-            feedback.textContent = "🎉 Amazing memory! All pairs found!";
+            feedback.textContent = "🌸 Amazing memory! All pairs found! ⭐";
             feedback.style.color = "#10b981";
             setTimeout(() => goToTask(3), 2000);
           }
@@ -304,16 +299,18 @@ function initTask2() {
   });
 }
 
-// ========== TASK 3: SECRET CODE ==========
-const cipherAnswer = "I LOVE YOU";
+// ========== TASK 3: SECRET CODE (longer message) ==========
+const cipherAnswer = "YOU ARE MY FOREVER";
 const cipherMap = {
-  I: "🦋",
-  L: "🌸",
-  O: "🌙",
-  V: "⭐",
-  E: "🔥",
   Y: "🌊",
+  O: "🌙",
   U: "🦄",
+  A: "🦋",
+  R: "🌸",
+  E: "🔥",
+  M: "⭐",
+  F: "🌺",
+  V: "🍀",
 };
 
 function initTask3() {
@@ -325,7 +322,6 @@ function initTask3() {
   puzzleEl.innerHTML = "";
   feedback.textContent = "";
 
-  // Show cipher key
   Object.entries(cipherMap).forEach(([letter, emoji]) => {
     const clue = document.createElement("span");
     clue.className = "cipher-clue";
@@ -333,7 +329,6 @@ function initTask3() {
     cluesEl.appendChild(clue);
   });
 
-  // Build puzzle
   const words = cipherAnswer.split(" ");
   words.forEach((word, wi) => {
     [...word].forEach((letter) => {
@@ -349,14 +344,11 @@ function initTask3() {
       input.maxLength = 1;
       input.dataset.answer = letter;
 
-      // Auto-advance to next input
       input.addEventListener("input", () => {
         if (input.value.length === 1) {
-          const next = input.parentElement.nextElementSibling?.querySelector(".cipher-input")
-            || input.closest(".cipher-puzzle")?.querySelectorAll(".cipher-input")[
-              [...input.closest(".cipher-puzzle").querySelectorAll(".cipher-input")].indexOf(input) + 1
-            ];
-          if (next) next.focus();
+          const allInputs = [...puzzleEl.querySelectorAll(".cipher-input")];
+          const idx = allInputs.indexOf(input);
+          if (idx < allInputs.length - 1) allInputs[idx + 1].focus();
         }
       });
 
@@ -365,7 +357,6 @@ function initTask3() {
       puzzleEl.appendChild(group);
     });
 
-    // Add space between words
     if (wi < words.length - 1) {
       const space = document.createElement("div");
       space.className = "cipher-space";
@@ -379,7 +370,7 @@ function initTask3() {
     const correct = cipherAnswer.replace(/ /g, "");
 
     if (answer === correct) {
-      feedback.textContent = "🎉 You cracked the code! I LOVE YOU! ❤️";
+      feedback.textContent = "💗 You cracked the code! YOU ARE MY FOREVER! 🌸";
       feedback.style.color = "#10b981";
       setTimeout(() => goToTask(4), 2000);
     } else {
@@ -390,72 +381,221 @@ function initTask3() {
   };
 }
 
-// ========== TASK 4: HIDDEN HEARTS ==========
+// ========== TASK 4: BLOW THE BALLOON ==========
+const PUFFS_NEEDED = 20;
+
 function initTask4() {
-  const scene = document.getElementById("hidden-hearts-scene");
-  const feedback = document.getElementById("hearts-feedback");
-  const foundEl = document.getElementById("hearts-found");
+  const balloon = document.getElementById("balloon");
+  const puffCountEl = document.getElementById("puff-count");
+  const blowBtn = document.getElementById("btn-blow");
+  const feedback = document.getElementById("balloon-feedback");
+
+  let puffs = 0;
+  balloon.style.width = "80px";
+  balloon.style.height = "80px";
+  balloon.classList.remove("popped");
+  balloon.style.opacity = "1";
+  balloon.style.transform = "scale(1)";
+  puffCountEl.textContent = "0";
   feedback.textContent = "";
-  foundEl.textContent = "0";
 
-  // Clear previous hearts and decorations
-  scene.querySelectorAll(".hidden-heart, .scene-tree, .scene-cloud, .scene-flower, .scene-house").forEach((el) => el.remove());
+  // Update face size
+  const face = balloon.querySelector(".moon-face");
+  const eyes = balloon.querySelector(".moon-eyes");
+  const smile = balloon.querySelector(".moon-smile");
 
-  // Add decorative elements
-  const decorations = [
-    { class: "scene-tree", emoji: "🌳", positions: [{ left: "5%", bottom: "10%" }, { left: "82%", bottom: "8%" }, { left: "45%", bottom: "5%" }] },
-    { class: "scene-cloud", emoji: "☁️", positions: [{ left: "15%", top: "10%" }, { left: "65%", top: "5%" }, { left: "40%", top: "15%" }] },
-    { class: "scene-flower", emoji: "🌸", positions: [{ left: "20%", bottom: "5%" }, { left: "60%", bottom: "12%" }, { left: "35%", bottom: "2%" }, { left: "75%", bottom: "3%" }] },
-    { class: "scene-house", emoji: "🏡", positions: [{ left: "55%", bottom: "18%" }] },
-  ];
+  blowBtn.onclick = () => {
+    puffs++;
+    puffCountEl.textContent = puffs;
 
-  decorations.forEach((dec) => {
-    dec.positions.forEach((pos) => {
-      const el = document.createElement("div");
-      el.className = dec.class;
-      el.textContent = dec.emoji;
-      Object.assign(el.style, pos);
-      scene.appendChild(el);
-    });
-  });
+    // Grow balloon
+    const size = 80 + (puffs * 8);
+    balloon.style.width = size + "px";
+    balloon.style.height = size + "px";
 
-  // Place 5 hidden hearts in tricky spots
-  const heartPositions = [
-    { left: "12%", top: "35%", opacity: "0.45" },
-    { left: "78%", top: "60%", opacity: "0.4" },
-    { left: "42%", top: "22%", opacity: "0.35" },
-    { left: "65%", top: "75%", opacity: "0.5" },
-    { left: "28%", top: "68%", opacity: "0.4" },
-  ];
+    // Scale face with balloon
+    const faceScale = 1 + puffs * 0.06;
+    if (eyes) eyes.style.fontSize = (0.7 + puffs * 0.04) + "rem";
+    if (smile) smile.style.fontSize = (0.9 + puffs * 0.05) + "rem";
 
-  let found = 0;
+    // Wobble animation
+    balloon.style.transform = `scale(${1 + Math.sin(puffs) * 0.05}) rotate(${(Math.random() - 0.5) * 6}deg)`;
+    setTimeout(() => {
+      balloon.style.transform = "scale(1) rotate(0deg)";
+    }, 200);
 
-  heartPositions.forEach((pos, i) => {
-    const heart = document.createElement("div");
-    heart.className = "hidden-heart";
-    heart.textContent = "💗";
-    heart.style.left = pos.left;
-    heart.style.top = pos.top;
-    heart.style.opacity = pos.opacity;
+    // Change shadow glow as it grows
+    const glow = Math.min(puffs * 2, 40);
+    balloon.style.boxShadow = `0 4px ${glow}px rgba(255, 183, 0, ${0.3 + puffs * 0.02})`;
 
-    heart.addEventListener("click", () => {
-      if (heart.classList.contains("found")) return;
-      heart.classList.add("found");
-      found++;
-      foundEl.textContent = found;
-
-      if (found === 5) {
-        feedback.textContent = "🎉 You found all the hearts! Eagle eyes!";
+    if (puffs >= PUFFS_NEEDED) {
+      // Pop!
+      blowBtn.disabled = true;
+      setTimeout(() => {
+        balloon.classList.add("popped");
+        feedback.textContent = "🌙 The moon is shining bright for you! ⭐💗";
         feedback.style.color = "#10b981";
-        setTimeout(() => goToTask(5), 2000);
+
+        // Scatter small stars
+        for (let i = 0; i < 15; i++) {
+          const star = document.createElement("div");
+          star.textContent = ["⭐", "🌟", "✨", "💫"][Math.floor(Math.random() * 4)];
+          star.style.cssText = `
+            position: fixed;
+            font-size: ${1 + Math.random()}rem;
+            left: ${40 + Math.random() * 20}%;
+            top: ${30 + Math.random() * 20}%;
+            pointer-events: none;
+            z-index: 100;
+            animation: heartFall ${2 + Math.random() * 2}s linear forwards;
+          `;
+          document.body.appendChild(star);
+          setTimeout(() => star.remove(), 4000);
+        }
+
+        setTimeout(() => goToTask(5), 2500);
+      }, 300);
+    }
+  };
+}
+
+// ========== TASK 5: PICTURE PUZZLE (Jigsaw) ==========
+function initTask5() {
+  const grid = document.getElementById("jigsaw-grid");
+  const feedback = document.getElementById("jigsaw-feedback");
+  const videoReveal = document.getElementById("video-reveal");
+  const video = document.getElementById("reveal-video");
+  grid.innerHTML = "";
+  feedback.textContent = "";
+  videoReveal.style.display = "none";
+
+  // Create a 3x3 jigsaw from the video's first frame
+  // We use colored gradient pieces as a visual puzzle
+  const colors = [
+    "linear-gradient(135deg, #ff9a9e, #fad0c4)",
+    "linear-gradient(135deg, #a18cd1, #fbc2eb)",
+    "linear-gradient(135deg, #ffecd2, #fcb69f)",
+    "linear-gradient(135deg, #f6d365, #fda085)",
+    "linear-gradient(135deg, #84fab0, #8fd3f4)",
+    "linear-gradient(135deg, #a1c4fd, #c2e9fb)",
+    "linear-gradient(135deg, #d4fc79, #96e6a1)",
+    "linear-gradient(135deg, #fbc2eb, #a6c1ee)",
+    "linear-gradient(135deg, #ff9a9e, #fecfef)",
+  ];
+
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const labels = ["💗", "🌸", "⭐", "🦋", "💜", "🌙", "🌺", "💕", "✨"];
+
+  // Create correct order reference and shuffle
+  const correctOrder = [...Array(9).keys()]; // 0-8
+  let currentOrder = [...correctOrder].sort(() => Math.random() - 0.5);
+
+  // Make sure it's actually shuffled
+  while (currentOrder.every((v, i) => v === i)) {
+    currentOrder.sort(() => Math.random() - 0.5);
+  }
+
+  let selectedIndex = null;
+
+  currentOrder.forEach((pieceIdx, gridPos) => {
+    const piece = document.createElement("div");
+    piece.className = "jigsaw-piece";
+    piece.dataset.piece = pieceIdx;
+    piece.dataset.gridPos = gridPos;
+    piece.style.background = colors[pieceIdx];
+    piece.textContent = labels[pieceIdx];
+    piece.style.display = "flex";
+    piece.style.alignItems = "center";
+    piece.style.justifyContent = "center";
+    piece.style.fontSize = "1.8rem";
+    piece.style.fontWeight = "bold";
+    piece.style.color = "rgba(255,255,255,0.8)";
+    piece.style.textShadow = "0 2px 8px rgba(0,0,0,0.15)";
+
+    piece.addEventListener("click", () => {
+      const allPieces = [...grid.querySelectorAll(".jigsaw-piece")];
+
+      if (selectedIndex === null) {
+        // Select first piece
+        selectedIndex = gridPos;
+        piece.classList.add("selected");
+      } else if (selectedIndex === gridPos) {
+        // Deselect
+        selectedIndex = null;
+        piece.classList.remove("selected");
+      } else {
+        // Swap pieces
+        const prevPiece = allPieces[selectedIndex];
+        prevPiece.classList.remove("selected");
+
+        // Swap in DOM
+        const parent = grid;
+        const pieces = [...parent.children];
+        const idx1 = selectedIndex;
+        const idx2 = gridPos;
+
+        // Swap the piece data
+        const tempBg = prevPiece.style.background;
+        const tempText = prevPiece.textContent;
+        const tempData = prevPiece.dataset.piece;
+
+        prevPiece.style.background = piece.style.background;
+        prevPiece.textContent = piece.textContent;
+        prevPiece.dataset.piece = piece.dataset.piece;
+
+        piece.style.background = tempBg;
+        piece.textContent = tempText;
+        piece.dataset.piece = tempData;
+
+        selectedIndex = null;
+
+        // Check if solved
+        const allCorrect = [...grid.querySelectorAll(".jigsaw-piece")].every(
+          (p, i) => parseInt(p.dataset.piece) === i
+        );
+
+        if (allCorrect) {
+          // Mark all correct
+          allPieces.forEach((p) => p.classList.add("correct"));
+          feedback.textContent = "🌸 Puzzle complete! Here's your surprise! 💗";
+          feedback.style.color = "#10b981";
+
+          setTimeout(() => {
+            grid.style.display = "none";
+            videoReveal.style.display = "block";
+            video.play().catch(() => { });
+          }, 1500);
+
+          // When video ends, go to next task
+          video.addEventListener("ended", () => {
+            setTimeout(() => goToTask(6), 1500);
+          });
+
+          // Also add a skip button
+          setTimeout(() => {
+            if (!document.getElementById("skip-video-btn")) {
+              const skipBtn = document.createElement("button");
+              skipBtn.id = "skip-video-btn";
+              skipBtn.className = "btn btn-next";
+              skipBtn.textContent = "Continue to Final Letter 💌";
+              skipBtn.style.marginTop = "12px";
+              skipBtn.addEventListener("click", () => {
+                video.pause();
+                goToTask(6);
+              });
+              videoReveal.appendChild(skipBtn);
+            }
+          }, 3000);
+        }
       }
     });
 
-    scene.appendChild(heart);
+    grid.appendChild(piece);
   });
 }
 
-// ========== TASK 5: FINAL LOVE LETTER ==========
+// ========== TASK 6: FINAL LOVE LETTER ==========
+// ✏️ REPLACE THIS WITH YOUR PERSONAL LETTER
 const loveLetter = `My dearest Valentine,
 
 From the moment you came into my life, everything changed. Your smile lights up my darkest days, and your laughter is the sweetest melody I've ever heard.
@@ -466,7 +606,7 @@ Today and every day, I choose you. I love you more than words could ever express
 
 Forever yours 💝`;
 
-function initTask5() {
+function initTask6() {
   const textEl = document.getElementById("typewriter-text");
   const celebration = document.getElementById("final-celebration");
   textEl.textContent = "";
@@ -474,13 +614,12 @@ function initTask5() {
   celebration.style.display = "none";
 
   let i = 0;
-  const speed = 35;
+  const speed = 60; // Slower typewriter
 
   function typeWriter() {
     if (i < loveLetter.length) {
       textEl.textContent += loveLetter.charAt(i);
       i++;
-      // Scroll the letter container
       textEl.parentElement.scrollTop = textEl.parentElement.scrollHeight;
       setTimeout(typeWriter, speed);
     } else {
@@ -507,18 +646,21 @@ function goToTask(num) {
   if (taskEl) {
     taskEl.classList.add("active-task");
 
-    // Initialize the task
+    // Scroll to top of adventure screen
+    document.getElementById("screen-adventure").scrollTop = 0;
+
     switch (num) {
       case 1: initTask1(); break;
       case 2: initTask2(); break;
       case 3: initTask3(); break;
       case 4: initTask4(); break;
       case 5: initTask5(); break;
+      case 6: initTask6(); break;
     }
   }
 }
 
-// ========== CONFETTI ==========
+// ========== CONFETTI (stars, hearts, flowers – no party poppers) ==========
 function launchConfetti() {
   const canvas = document.getElementById("confetti-canvas");
   const ctx = canvas.getContext("2d");
@@ -526,7 +668,7 @@ function launchConfetti() {
   canvas.height = window.innerHeight;
 
   const confetti = [];
-  const colors = ["#ff6b9d", "#ee4488", "#a855f7", "#f472b6", "#fbbf24", "#34d399", "#60a5fa", "#f87171"];
+  const colors = ["#ff6b9d", "#ee4488", "#a855f7", "#f472b6", "#fbbf24", "#f9a8d4", "#c084fc", "#f87171"];
 
   for (let i = 0; i < 200; i++) {
     confetti.push({
@@ -539,6 +681,7 @@ function launchConfetti() {
       angle: Math.random() * Math.PI * 2,
       spin: (Math.random() - 0.5) * 0.1,
       drift: (Math.random() - 0.5) * 1,
+      shape: Math.random() > 0.5 ? "heart" : "star",
     });
   }
 
@@ -558,7 +701,29 @@ function launchConfetti() {
         ctx.translate(c.x, c.y);
         ctx.rotate(c.angle);
         ctx.fillStyle = c.color;
-        ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+
+        if (c.shape === "heart") {
+          // Draw mini heart shape
+          ctx.beginPath();
+          ctx.moveTo(0, -c.w / 4);
+          ctx.bezierCurveTo(-c.w / 2, -c.w / 2, -c.w / 2, c.w / 4, 0, c.w / 2);
+          ctx.bezierCurveTo(c.w / 2, c.w / 4, c.w / 2, -c.w / 2, 0, -c.w / 4);
+          ctx.fill();
+        } else {
+          // Draw star
+          const spikes = 5;
+          const outerR = c.w / 2;
+          const innerR = outerR / 2;
+          ctx.beginPath();
+          for (let s = 0; s < spikes * 2; s++) {
+            const r = s % 2 === 0 ? outerR : innerR;
+            const a = (s * Math.PI) / spikes - Math.PI / 2;
+            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+
         ctx.restore();
       }
     });

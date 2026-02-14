@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +8,12 @@
   <meta name="description" content="A special Valentine's Day surprise just for you." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <!-- ========== MUSIC PLAYER (persistent) ========== -->
@@ -29,7 +33,6 @@
         <button id="btn-no" class="btn btn-no">No 😢</button>
       </div>
     </div>
-    <!-- Toast container -->
     <div id="toast-container"></div>
   </section>
 
@@ -38,7 +41,8 @@
     <div id="heart-rain-container"></div>
     <div class="celebrate-content">
       <div id="present-box" class="present-box">
-        <div class="present-lid">🎁</div>
+        <div class="present-wrap">🎀</div>
+        <div class="present-body-emoji">🎁</div>
         <div class="present-text">
           <h1>Oh, I knew you would say yes!</h1>
           <p>Bless your heart! 💗</p>
@@ -52,12 +56,13 @@
 
   <!-- ========== SCREEN 3 – Adventure Hub ========== -->
   <section id="screen-adventure" class="screen">
+
     <!-- Task 1: Love Letter Puzzle -->
     <div id="task-1" class="task active-task">
       <div class="task-header">
-        <span class="task-number">1 / 5</span>
+        <span class="task-number">1 / 6</span>
         <h2>💌 Love Letter Puzzle</h2>
-        <p class="task-desc">Drag the words into the right order to reveal the secret message!</p>
+        <p class="task-desc">Drag or click the words into the right order to reveal the secret message!</p>
       </div>
       <div id="puzzle-drop-zone" class="puzzle-drop-zone"></div>
       <div id="puzzle-word-bank" class="puzzle-word-bank"></div>
@@ -68,7 +73,7 @@
     <!-- Task 2: Memory Match -->
     <div id="task-2" class="task">
       <div class="task-header">
-        <span class="task-number">2 / 5</span>
+        <span class="task-number">2 / 6</span>
         <h2>🧠 Memory Match</h2>
         <p class="task-desc">Find all the matching pairs!</p>
       </div>
@@ -79,7 +84,7 @@
     <!-- Task 3: Secret Code -->
     <div id="task-3" class="task">
       <div class="task-header">
-        <span class="task-number">3 / 5</span>
+        <span class="task-number">3 / 6</span>
         <h2>🔐 Secret Code</h2>
         <p class="task-desc">Each emoji represents a letter. Crack the code to reveal the hidden message!</p>
       </div>
@@ -89,25 +94,48 @@
       <div id="cipher-feedback" class="task-feedback"></div>
     </div>
 
-    <!-- Task 4: Hidden Hearts -->
+    <!-- Task 4: Blow the Balloon -->
     <div id="task-4" class="task">
       <div class="task-header">
-        <span class="task-number">4 / 5</span>
-        <h2>🗺️ Hidden Hearts</h2>
-        <p class="task-desc">Find and click all 5 hidden hearts in the scene below!</p>
+        <span class="task-number">4 / 6</span>
+        <h2>🌙 Blow the Balloon</h2>
+        <p class="task-desc">Press the button to blow up the moon balloon!</p>
       </div>
-      <div id="hidden-hearts-scene" class="hidden-hearts-scene">
-        <div class="scene-bg"></div>
-        <!-- hearts placed via JS -->
+      <div class="balloon-area">
+        <div id="balloon" class="balloon">
+          <div class="moon-face">
+            <div class="moon-eyes">
+              <span class="moon-eye left-eye">👀</span>
+            </div>
+            <div class="moon-smile">😊</div>
+          </div>
+        </div>
+        <p id="balloon-counter" class="balloon-counter">Puffs: <span id="puff-count">0</span></p>
+        <button id="btn-blow" class="btn btn-blow">💨 Blow!</button>
       </div>
-      <p id="hearts-counter" class="hearts-counter">Hearts found: <span id="hearts-found">0</span> / 5</p>
-      <div id="hearts-feedback" class="task-feedback"></div>
+      <div id="balloon-feedback" class="task-feedback"></div>
     </div>
 
-    <!-- Task 5: Final Love Letter -->
+    <!-- Task 5: Picture Puzzle -->
     <div id="task-5" class="task">
       <div class="task-header">
-        <span class="task-number">5 / 5</span>
+        <span class="task-number">5 / 6</span>
+        <h2>🧩 Picture Puzzle</h2>
+        <p class="task-desc">Put the pieces in the right order to reveal a surprise!</p>
+      </div>
+      <div id="jigsaw-grid" class="jigsaw-grid"></div>
+      <div id="jigsaw-feedback" class="task-feedback"></div>
+      <div id="video-reveal" class="video-reveal" style="display:none;">
+        <video id="reveal-video" controls playsinline preload="none">
+          <source src="video/favourites.mov" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+
+    <!-- Task 6: Final Love Letter -->
+    <div id="task-6" class="task">
+      <div class="task-header">
+        <span class="task-number">6 / 6</span>
         <h2>💝 Final Love Letter</h2>
       </div>
       <div id="final-letter" class="final-letter">
@@ -127,4 +155,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
