@@ -672,7 +672,7 @@ function initTask6() {
   celebration.style.display = "none";
 
   let i = 0;
-  const speed = 60; // Slower typewriter
+  const speed = 130; // Natural speaking pace
 
   function typeWriter() {
     if (i < loveLetter.length) {
