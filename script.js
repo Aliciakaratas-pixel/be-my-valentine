@@ -428,11 +428,20 @@ function initTask4() {
   balloon.style.transform = "scale(1)";
   puffCountEl.textContent = "0";
   feedback.textContent = "";
+  blowBtn.disabled = false;
 
-  // Update face size
-  const face = balloon.querySelector(".moon-face");
-  const eyes = balloon.querySelector(".moon-eyes");
-  const smile = balloon.querySelector(".moon-smile");
+  // Generate twinkling stars
+  const starsContainer = document.getElementById("stars-container");
+  starsContainer.innerHTML = "";
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement("div");
+    star.className = Math.random() > 0.85 ? "star big" : "star";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.setProperty("--duration", (1.5 + Math.random() * 3) + "s");
+    star.style.animationDelay = Math.random() * 3 + "s";
+    starsContainer.appendChild(star);
+  }
 
   blowBtn.onclick = () => {
     puffs++;
@@ -443,20 +452,15 @@ function initTask4() {
     balloon.style.width = size + "px";
     balloon.style.height = size + "px";
 
-    // Scale face with balloon
-    const faceScale = 1 + puffs * 0.06;
-    if (eyes) eyes.style.fontSize = (0.7 + puffs * 0.04) + "rem";
-    if (smile) smile.style.fontSize = (0.9 + puffs * 0.05) + "rem";
-
     // Wobble animation
     balloon.style.transform = `scale(${1 + Math.sin(puffs) * 0.05}) rotate(${(Math.random() - 0.5) * 6}deg)`;
     setTimeout(() => {
       balloon.style.transform = "scale(1) rotate(0deg)";
     }, 200);
 
-    // Change shadow glow as it grows
-    const glow = Math.min(puffs * 2, 40);
-    balloon.style.boxShadow = `0 4px ${glow}px rgba(255, 183, 0, ${0.3 + puffs * 0.02})`;
+    // Golden glow grows with the moon
+    const glow = Math.min(puffs * 3, 60);
+    balloon.style.boxShadow = `0 0 ${glow}px rgba(255, 215, 0, ${0.4 + puffs * 0.02}), 0 0 ${glow * 2}px rgba(255, 183, 0, ${0.1 + puffs * 0.01})`;
 
     if (puffs >= PUFFS_NEEDED) {
       // Pop!
@@ -464,10 +468,9 @@ function initTask4() {
       setTimeout(() => {
         balloon.classList.add("popped");
         feedback.textContent = "🌙 The moon is shining bright for you! ⭐💗";
-        feedback.style.color = "#10b981";
 
         // Scatter small stars
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 20; i++) {
           const star = document.createElement("div");
           star.textContent = ["⭐", "🌟", "✨", "💫"][Math.floor(Math.random() * 4)];
           star.style.cssText = `
