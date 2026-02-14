@@ -779,7 +779,7 @@ function startTeaseSequence() {
           showStep();
         });
         content.appendChild(helpBtn);
-      }, 10000);
+      }, 7000);
     } else {
       // Text IS the button
       const btn = document.createElement("button");
