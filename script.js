@@ -502,28 +502,23 @@ function initTask5() {
   feedback.textContent = "";
   videoReveal.style.display = "none";
 
-  // Create a 3x3 jigsaw from the video's first frame
-  // We use colored gradient pieces as a visual puzzle
-  const colors = [
-    "linear-gradient(135deg, #ff9a9e, #fad0c4)",
-    "linear-gradient(135deg, #a18cd1, #fbc2eb)",
-    "linear-gradient(135deg, #ffecd2, #fcb69f)",
-    "linear-gradient(135deg, #f6d365, #fda085)",
-    "linear-gradient(135deg, #84fab0, #8fd3f4)",
-    "linear-gradient(135deg, #a1c4fd, #c2e9fb)",
-    "linear-gradient(135deg, #d4fc79, #96e6a1)",
-    "linear-gradient(135deg, #fbc2eb, #a6c1ee)",
-    "linear-gradient(135deg, #ff9a9e, #fecfef)",
+  // 9 pieces forming a pastel pink → purple gradient circle when solved
+  // Gradients flow from pink (outer edge) toward purple (center)
+  const puzzlePieces = [
+    { bg: "linear-gradient(135deg, #fcd4e4 0%, #c084fc 100%)", emoji: "☀️" },   // 0: Top-left
+    { bg: "linear-gradient(180deg, #fcd4e4 0%, #c084fc 100%)", emoji: "☁️" },   // 1: Top-mid
+    { bg: "linear-gradient(225deg, #fcd4e4 0%, #c084fc 100%)", emoji: "🐦" },   // 2: Top-right
+    { bg: "linear-gradient(90deg,  #fcd4e4 0%, #c084fc 100%)", emoji: "🍷" },   // 3: Mid-left
+    { bg: "radial-gradient(circle, #b855f6, #9333ea)", emoji: "🍝" },   // 4: Center
+    { bg: "linear-gradient(270deg, #fcd4e4 0%, #c084fc 100%)", emoji: "🎭" },   // 5: Mid-right
+    { bg: "linear-gradient(45deg,  #fcd4e4 0%, #c084fc 100%)", emoji: "❤️" },   // 6: Bot-left
+    { bg: "linear-gradient(0deg,   #fcd4e4 0%, #c084fc 100%)", emoji: "📅" },   // 7: Bot-mid
+    { bg: "linear-gradient(315deg, #fcd4e4 0%, #c084fc 100%)", emoji: "👫" },   // 8: Bot-right
   ];
 
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const labels = ["💗", "🌸", "⭐", "🦋", "💜", "🌙", "🌺", "💕", "✨"];
-
-  // Create correct order reference and shuffle
-  const correctOrder = [...Array(9).keys()]; // 0-8
+  // Shuffle
+  const correctOrder = [...Array(9).keys()];
   let currentOrder = [...correctOrder].sort(() => Math.random() - 0.5);
-
-  // Make sure it's actually shuffled
   while (currentOrder.every((v, i) => v === i)) {
     currentOrder.sort(() => Math.random() - 0.5);
   }
@@ -531,54 +526,43 @@ function initTask5() {
   let selectedIndex = null;
 
   currentOrder.forEach((pieceIdx, gridPos) => {
-    const piece = document.createElement("div");
-    piece.className = "jigsaw-piece";
-    piece.dataset.piece = pieceIdx;
-    piece.dataset.gridPos = gridPos;
-    piece.style.background = colors[pieceIdx];
-    piece.textContent = labels[pieceIdx];
-    piece.style.display = "flex";
-    piece.style.alignItems = "center";
-    piece.style.justifyContent = "center";
-    piece.style.fontSize = "1.8rem";
-    piece.style.fontWeight = "bold";
-    piece.style.color = "rgba(255,255,255,0.8)";
-    piece.style.textShadow = "0 2px 8px rgba(0,0,0,0.15)";
+    const el = document.createElement("div");
+    el.className = "jigsaw-piece";
+    el.dataset.piece = pieceIdx;
+    el.style.background = puzzlePieces[pieceIdx].bg;
+    el.textContent = puzzlePieces[pieceIdx].emoji;
+    el.style.display = "flex";
+    el.style.alignItems = "center";
+    el.style.justifyContent = "center";
+    el.style.fontSize = "2rem";
+    el.style.cursor = "pointer";
+    el.style.userSelect = "none";
 
-    piece.addEventListener("click", () => {
+    el.addEventListener("click", () => {
       const allPieces = [...grid.querySelectorAll(".jigsaw-piece")];
 
       if (selectedIndex === null) {
-        // Select first piece
         selectedIndex = gridPos;
-        piece.classList.add("selected");
+        el.classList.add("selected");
       } else if (selectedIndex === gridPos) {
-        // Deselect
         selectedIndex = null;
-        piece.classList.remove("selected");
+        el.classList.remove("selected");
       } else {
-        // Swap pieces
-        const prevPiece = allPieces[selectedIndex];
-        prevPiece.classList.remove("selected");
+        const prevEl = allPieces[selectedIndex];
+        prevEl.classList.remove("selected");
 
-        // Swap in DOM
-        const parent = grid;
-        const pieces = [...parent.children];
-        const idx1 = selectedIndex;
-        const idx2 = gridPos;
+        // Swap visual data
+        const tempBg = prevEl.style.background;
+        const tempEmoji = prevEl.textContent;
+        const tempData = prevEl.dataset.piece;
 
-        // Swap the piece data
-        const tempBg = prevPiece.style.background;
-        const tempText = prevPiece.textContent;
-        const tempData = prevPiece.dataset.piece;
+        prevEl.style.background = el.style.background;
+        prevEl.textContent = el.textContent;
+        prevEl.dataset.piece = el.dataset.piece;
 
-        prevPiece.style.background = piece.style.background;
-        prevPiece.textContent = piece.textContent;
-        prevPiece.dataset.piece = piece.dataset.piece;
-
-        piece.style.background = tempBg;
-        piece.textContent = tempText;
-        piece.dataset.piece = tempData;
+        el.style.background = tempBg;
+        el.textContent = tempEmoji;
+        el.dataset.piece = tempData;
 
         selectedIndex = null;
 
@@ -588,7 +572,6 @@ function initTask5() {
         );
 
         if (allCorrect) {
-          // Mark all correct
           allPieces.forEach((p) => p.classList.add("correct"));
           feedback.textContent = "🌸 Puzzle complete! Here's your surprise! 💗";
           feedback.style.color = "#10b981";
@@ -599,12 +582,10 @@ function initTask5() {
             video.play().catch(() => { });
           }, 1500);
 
-          // When video ends, go to next task
           video.addEventListener("ended", () => {
             setTimeout(() => goToTask(6), 1500);
           });
 
-          // Also add a skip button
           setTimeout(() => {
             if (!document.getElementById("skip-video-btn")) {
               const skipBtn = document.createElement("button");
@@ -623,7 +604,7 @@ function initTask5() {
       }
     });
 
-    grid.appendChild(piece);
+    grid.appendChild(el);
   });
 }
 
