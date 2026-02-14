@@ -159,6 +159,29 @@ document.getElementById("btn-start-adventure").addEventListener("click", () => {
   initTask1();
 });
 
+// ========== NEXT TASK BUTTON HELPER ==========
+function showNextButton(taskNum, message, container) {
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = "margin-top: 20px; animation: fadeInUp 0.6s ease;";
+
+  const quote = document.createElement("p");
+  quote.textContent = message;
+  quote.style.cssText = "font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #c94080; margin-bottom: 12px;";
+
+  const btn = document.createElement("button");
+  btn.className = "btn btn-adventure";
+  btn.textContent = "Let's Go! 💕";
+  btn.style.animation = "pulse 1.5s ease-in-out infinite";
+  btn.addEventListener("click", () => {
+    wrapper.remove();
+    goToTask(taskNum);
+  });
+
+  wrapper.appendChild(quote);
+  wrapper.appendChild(btn);
+  container.appendChild(wrapper);
+}
+
 // ========== TASK 1: LOVE LETTER PUZZLE ==========
 const puzzleSolution = ["You", "are", "the", "most", "beautiful", "thing", "that", "ever", "happened", "to", "me"];
 
@@ -233,7 +256,7 @@ function initTask1() {
     if (words.join(" ") === puzzleSolution.join(" ")) {
       feedback.textContent = "⭐ Perfect! You revealed the love letter! 💗";
       feedback.style.color = "#10b981";
-      setTimeout(() => goToTask(2), 2000);
+      setTimeout(() => showNextButton(2, "Are you ready for the next riddle? 💕", document.getElementById("task-1")), 1500);
     } else {
       feedback.textContent = "💭 Not quite right... try again!";
       feedback.style.color = "#ef4444";
@@ -282,7 +305,7 @@ function initTask2() {
           if (matched === memoryEmojis.length) {
             feedback.textContent = "🌸 Amazing memory! All pairs found! ⭐";
             feedback.style.color = "#10b981";
-            setTimeout(() => goToTask(3), 2000);
+            setTimeout(() => showNextButton(3, "You're doing so good! Next one's up! 🌟", document.getElementById("task-2")), 1500);
           }
         } else {
           setTimeout(() => {
@@ -408,7 +431,7 @@ function initTask3() {
       launchCheeseFirework();
       setTimeout(() => launchCheeseFirework(), 800);
       setTimeout(() => launchCheeseFirework(), 1600);
-      setTimeout(() => goToTask(4), 4500);
+      setTimeout(() => showNextButton(4, "Almost there! Ready for the next one? ✨", document.getElementById("task-3")), 3000);
     } else {
       feedback.textContent = "🔐 Not quite... check the clues again!";
       feedback.style.color = "#ef4444";
@@ -492,7 +515,7 @@ function initTask4() {
           setTimeout(() => star.remove(), 4000);
         }
 
-        setTimeout(() => goToTask(5), 2500);
+        setTimeout(() => showNextButton(5, "You almost made it to the final! 🎉", document.getElementById("task-4")), 2000);
       }, 300);
     }
   };
@@ -588,24 +611,38 @@ function initTask5() {
             video.play().catch(() => { });
           }, 1500);
 
-          video.addEventListener("ended", () => {
-            setTimeout(() => goToTask(6), 1500);
-          });
+          // Show the final button after video ends or via skip
+          function showFinalButton() {
+            if (!document.getElementById("final-next-btn")) {
+              const wrapper = document.createElement("div");
+              wrapper.id = "final-next-btn";
+              wrapper.style.cssText = "margin-top: 20px; animation: fadeInUp 0.6s ease; text-align: center;";
 
-          setTimeout(() => {
-            if (!document.getElementById("skip-video-btn")) {
-              const skipBtn = document.createElement("button");
-              skipBtn.id = "skip-video-btn";
-              skipBtn.className = "btn btn-next";
-              skipBtn.textContent = "Continue to Final Letter 💌";
-              skipBtn.style.marginTop = "12px";
-              skipBtn.addEventListener("click", () => {
+              const quote = document.createElement("p");
+              quote.textContent = "Okay, this is the last and most important step... are you ready? 💝";
+              quote.style.cssText = "font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #c94080; margin-bottom: 12px;";
+
+              const btn = document.createElement("button");
+              btn.className = "btn btn-adventure";
+              btn.textContent = "I'm Ready 💌";
+              btn.style.animation = "pulse 1.5s ease-in-out infinite";
+              btn.addEventListener("click", () => {
                 video.pause();
                 goToTask(6);
               });
-              videoReveal.appendChild(skipBtn);
+
+              wrapper.appendChild(quote);
+              wrapper.appendChild(btn);
+              videoReveal.appendChild(wrapper);
             }
-          }, 3000);
+          }
+
+          video.addEventListener("ended", () => {
+            setTimeout(showFinalButton, 1000);
+          });
+
+          // Also show skip/continue after 5 seconds
+          setTimeout(showFinalButton, 5000);
         }
       }
     });
