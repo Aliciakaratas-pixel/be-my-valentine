@@ -300,17 +300,25 @@ function initTask2() {
 }
 
 // ========== TASK 3: SECRET CODE (longer message) ==========
-const cipherAnswer = "YOU ARE MY FOREVER";
+const cipherAnswer = "I LOVE YOU MY BABY BABY BELL WE HAVE SO MUCH CHEESE GOODNESS";
 const cipherMap = {
-  Y: "🌊",
+  I: "🦋",
+  L: "🌸",
   O: "🌙",
-  U: "🦄",
-  A: "🦋",
-  R: "🌸",
-  E: "🔥",
-  M: "⭐",
-  F: "🌺",
   V: "🍀",
+  E: "🔥",
+  Y: "🌊",
+  U: "🦄",
+  M: "⭐",
+  B: "🌺",
+  A: "💫",
+  D: "🎀",
+  H: "🧸",
+  S: "💎",
+  C: "🌈",
+  W: "🪻",
+  G: "🍄",
+  N: "🫧",
 };
 
 function initTask3() {
@@ -370,7 +378,7 @@ function initTask3() {
     const correct = cipherAnswer.replace(/ /g, "");
 
     if (answer === correct) {
-      feedback.textContent = "💗 You cracked the code! YOU ARE MY FOREVER! 🌸";
+      feedback.textContent = "💗 You cracked the code! 🧀🌸";
       feedback.style.color = "#10b981";
       setTimeout(() => goToTask(4), 2000);
     } else {
