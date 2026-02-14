@@ -300,7 +300,14 @@ function initTask2() {
 }
 
 // ========== TASK 3: SECRET CODE (longer message) ==========
-const cipherAnswer = "I LOVE YOU MY BABY BABY BELL WE HAVE SO MUCH CHEESE GOODNESS";
+// Sentences on separate lines for readability
+const cipherLines = [
+  "I LOVE YOU MY BABY",
+  "BABY BELL",
+  "WE HAVE SO MUCH CHEESE",
+  "GOODNESS",
+];
+const cipherAnswer = cipherLines.join(" ");
 const cipherMap = {
   I: "🦋",
   L: "🌸",
@@ -337,39 +344,52 @@ function initTask3() {
     cluesEl.appendChild(clue);
   });
 
-  const words = cipherAnswer.split(" ");
-  words.forEach((word, wi) => {
-    [...word].forEach((letter) => {
-      const group = document.createElement("div");
-      group.className = "cipher-letter-group";
+  // Render each sentence on its own line
+  cipherLines.forEach((line) => {
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "cipher-line";
+    lineDiv.style.display = "flex";
+    lineDiv.style.flexWrap = "wrap";
+    lineDiv.style.gap = "4px";
+    lineDiv.style.justifyContent = "center";
+    lineDiv.style.marginBottom = "10px";
 
-      const emoji = document.createElement("span");
-      emoji.className = "cipher-emoji";
-      emoji.textContent = cipherMap[letter] || "❓";
+    const words = line.split(" ");
+    words.forEach((word, wi) => {
+      [...word].forEach((letter) => {
+        const group = document.createElement("div");
+        group.className = "cipher-letter-group";
 
-      const input = document.createElement("input");
-      input.className = "cipher-input";
-      input.maxLength = 1;
-      input.dataset.answer = letter;
+        const emoji = document.createElement("span");
+        emoji.className = "cipher-emoji";
+        emoji.textContent = cipherMap[letter] || "❓";
 
-      input.addEventListener("input", () => {
-        if (input.value.length === 1) {
-          const allInputs = [...puzzleEl.querySelectorAll(".cipher-input")];
-          const idx = allInputs.indexOf(input);
-          if (idx < allInputs.length - 1) allInputs[idx + 1].focus();
-        }
+        const input = document.createElement("input");
+        input.className = "cipher-input";
+        input.maxLength = 1;
+        input.dataset.answer = letter;
+
+        input.addEventListener("input", () => {
+          if (input.value.length === 1) {
+            const allInputs = [...puzzleEl.querySelectorAll(".cipher-input")];
+            const idx = allInputs.indexOf(input);
+            if (idx < allInputs.length - 1) allInputs[idx + 1].focus();
+          }
+        });
+
+        group.appendChild(emoji);
+        group.appendChild(input);
+        lineDiv.appendChild(group);
       });
 
-      group.appendChild(emoji);
-      group.appendChild(input);
-      puzzleEl.appendChild(group);
+      if (wi < words.length - 1) {
+        const space = document.createElement("div");
+        space.className = "cipher-space";
+        lineDiv.appendChild(space);
+      }
     });
 
-    if (wi < words.length - 1) {
-      const space = document.createElement("div");
-      space.className = "cipher-space";
-      puzzleEl.appendChild(space);
-    }
+    puzzleEl.appendChild(lineDiv);
   });
 
   checkBtn.onclick = () => {
@@ -765,27 +785,27 @@ function launchCheeseFirework() {
     const endX = Math.cos(angle) * distance;
     const endY = Math.sin(angle) * distance;
     const size = 1.2 + Math.random() * 1.5;
-    const duration = 0.8 + Math.random() * 0.8;
+    const dur = 1 + Math.random() * 0.8;
 
-    el.style.cssText = `
-      position: fixed;
-      left: ${centerX}px;
-      top: ${centerY}px;
-      font-size: ${size}rem;
-      pointer-events: none;
-      z-index: 10000;
-      transition: all ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      opacity: 1;
-    `;
+    el.style.position = "fixed";
+    el.style.left = centerX + "px";
+    el.style.top = centerY + "px";
+    el.style.fontSize = size + "rem";
+    el.style.pointerEvents = "none";
+    el.style.zIndex = "10000";
+    el.style.opacity = "1";
+    el.style.transform = "translate(0px, 0px) rotate(0deg)";
     document.body.appendChild(el);
 
-    // Trigger the firework burst
-    requestAnimationFrame(() => {
+    // Force browser to render initial position, then animate
+    const delay = 10 + i * 5;
+    setTimeout(() => {
+      el.style.transition = `all ${dur}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
       el.style.transform = `translate(${endX}px, ${endY}px) rotate(${Math.random() * 720}deg)`;
       el.style.opacity = "0";
-    });
+    }, delay);
 
-    setTimeout(() => el.remove(), duration * 1000 + 200);
+    setTimeout(() => el.remove(), (dur + 1) * 1000 + delay);
   }
 }
 
