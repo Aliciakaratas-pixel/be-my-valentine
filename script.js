@@ -749,7 +749,7 @@ function startTeaseSequence() {
       btn.className = "tease-btn";
       btn.textContent = s.text;
       btn.style.transition = "none";
-      btn.style.animation = "fadeInUp 0.5s ease, pulse 1.5s ease-in-out infinite";
+      btn.style.animation = "fadeInUp 0.5s ease";
 
       function runAway() {
         const maxX = window.innerWidth - 250;
