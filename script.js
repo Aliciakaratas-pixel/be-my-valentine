@@ -718,7 +718,7 @@ function startTeaseSequence() {
   const content = document.getElementById("tease-content");
 
   const steps = [
-    { text: "Not so fast! 😏" },
+    { text: "Not so fast! 🤚" },
     { text: "This time for real... okay okay, I'm ready! 😤" },
     { text: "AHHHH! 😱", runaway: true },
     { text: "Okay my dear, I won't let you wait no more, hihi 💕", mega: true },
