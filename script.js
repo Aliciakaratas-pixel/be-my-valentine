@@ -736,7 +736,7 @@ function startTeaseSequence() {
   const steps = [
     { message: "Not so fast! 😏", btn: "Okay okay..." },
     { message: "This time for real... okay okay, I'm ready! 😤", btn: "Let me see it!" },
-    { message: "AHHHH! 😱", btn: "PLEASE! 🥺" },
+    { message: "AHHHH! 😱", btn: "PLEASE! 🥺", runaway: true },
     { message: "Okay my dear, I won't let you wait no more, hihi 💕", btn: null, mega: true },
   ];
 
@@ -766,6 +766,42 @@ function startTeaseSequence() {
       });
       content.innerHTML = "";
       content.appendChild(btn);
+    } else if (s.runaway) {
+      // Runaway button!
+      const btn = document.createElement("button");
+      btn.className = "tease-btn";
+      btn.textContent = s.btn;
+      btn.style.position = "relative";
+      btn.style.transition = "none";
+
+      function runAway() {
+        const maxX = window.innerWidth - 200;
+        const maxY = window.innerHeight - 100;
+        const newX = Math.random() * maxX;
+        const newY = Math.random() * maxY;
+        btn.style.position = "fixed";
+        btn.style.left = newX + "px";
+        btn.style.top = newY + "px";
+        btn.style.zIndex = "999";
+      }
+
+      btn.addEventListener("mouseover", runAway);
+      btn.addEventListener("touchstart", (e) => { e.preventDefault(); runAway(); });
+
+      content.appendChild(btn);
+
+      // After 3 seconds, show the real button
+      setTimeout(() => {
+        const helpBtn = document.createElement("button");
+        helpBtn.className = "tease-btn";
+        helpBtn.textContent = "Hey, press here! 👋";
+        helpBtn.style.animation = "fadeInUp 0.6s ease, pulse 1.5s ease-in-out infinite";
+        helpBtn.addEventListener("click", () => {
+          step++;
+          showStep();
+        });
+        content.appendChild(helpBtn);
+      }, 3000);
     } else {
       const btn = document.createElement("button");
       btn.className = "tease-btn";
