@@ -595,16 +595,17 @@ function initTask5() {
 }
 
 // ========== TASK 6: FINAL LOVE LETTER ==========
-// ✏️ REPLACE THIS WITH YOUR PERSONAL LETTER
-const loveLetter = `My dearest Valentine,
+const loveLetter = `My Loveletter to you
 
-From the moment you came into my life, everything changed. Your smile lights up my darkest days, and your laughter is the sweetest melody I've ever heard.
+You made it to the final page my love. Have you been enjoying it so far? Do you like the music?
+Take a second to take in how lovable and wonderful you are.
+My love for you goes deeply and I can't help but wanting to find ways to show you how my heart feels for you.
+I am so grateful for each and every day with you.
 
-Every moment with you feels like a beautiful dream I never want to wake up from. You are my sunshine, my moonlight, and every star in between.
+You are good. You are caring. You are warm hearted. You will be a good doctor. But most of all you are a Wonderful person.
+A beloved son, a thought upon brother, a funny Mario kart uncle, a cherished and thoughtful grandchild\u2026 \u2026and my personal favorite, The most outstanding, well mannered and caring love of my life.
 
-Today and every day, I choose you. I love you more than words could ever express.
-
-Forever yours 💝`;
+Happy Valentine's Day 💝`;
 
 function initTask6() {
   const textEl = document.getElementById("typewriter-text");
