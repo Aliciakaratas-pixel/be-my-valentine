@@ -161,25 +161,15 @@ document.getElementById("btn-start-adventure").addEventListener("click", () => {
 
 // ========== NEXT TASK BUTTON HELPER ==========
 function showNextButton(taskNum, message, container) {
-  const wrapper = document.createElement("div");
-  wrapper.style.cssText = "margin-top: 20px; animation: fadeInUp 0.6s ease;";
-
-  const quote = document.createElement("p");
-  quote.textContent = message;
-  quote.style.cssText = "font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #c94080; margin-bottom: 12px;";
-
   const btn = document.createElement("button");
   btn.className = "btn btn-adventure";
-  btn.textContent = "Let's Go! 💕";
-  btn.style.animation = "pulse 1.5s ease-in-out infinite";
+  btn.textContent = message;
+  btn.style.cssText = "margin-top: 20px; animation: fadeInUp 0.6s ease; font-family: 'Dancing Script', cursive; font-size: 1.3rem;";
   btn.addEventListener("click", () => {
-    wrapper.remove();
+    btn.remove();
     goToTask(taskNum);
   });
-
-  wrapper.appendChild(quote);
-  wrapper.appendChild(btn);
-  container.appendChild(wrapper);
+  container.appendChild(btn);
 }
 
 // ========== TASK 1: LOVE LETTER PUZZLE ==========
@@ -327,12 +317,8 @@ function initTask2() {
 const cipherLines = [
   "I LOVE YOU MY BABY",
   "BABY BELL",
-  "WE",
-  "HAVE",
-  "SO",
-  "MUCH",
-  "CHEESE",
-  "GOODNESS",
+  "WE HAVE SO MUCH",
+  "CHEESE GOODNESS",
 ];
 const cipherAnswer = cipherLines.join(" ");
 const cipherMap = {
@@ -427,11 +413,9 @@ function initTask3() {
     if (answer === correct) {
       feedback.textContent = "💗 You cracked the code! 🧀🌸";
       feedback.style.color = "#10b981";
-      // 🧀 TRIPLE CHEESE FIREWORK!
+      // 🧀 CHEESE FIREWORK!
       launchCheeseFirework();
-      setTimeout(() => launchCheeseFirework(), 800);
-      setTimeout(() => launchCheeseFirework(), 1600);
-      setTimeout(() => showNextButton(4, "Almost there! Ready for the next one? ✨", document.getElementById("task-3")), 3000);
+      setTimeout(() => showNextButton(4, "Almost there! Ready for the next one? ✨", document.getElementById("task-3")), 2500);
     } else {
       feedback.textContent = "🔐 Not quite... check the clues again!";
       feedback.style.color = "#ef4444";
@@ -734,10 +718,10 @@ function startTeaseSequence() {
   const content = document.getElementById("tease-content");
 
   const steps = [
-    { message: "Not so fast! 😏", btn: "Okay okay..." },
-    { message: "This time for real... okay okay, I'm ready! 😤", btn: "Let me see it!" },
-    { message: "AHHHH! 😱", btn: "PLEASE! 🥺", runaway: true },
-    { message: "Okay my dear, I won't let you wait no more, hihi 💕", btn: null, mega: true },
+    { text: "Not so fast! 😏" },
+    { text: "This time for real... okay okay, I'm ready! 😤" },
+    { text: "AHHHH! 😱", runaway: true },
+    { text: "Okay my dear, I won't let you wait no more, hihi 💕", mega: true },
   ];
 
   let step = 0;
@@ -745,40 +729,32 @@ function startTeaseSequence() {
   function showStep() {
     content.innerHTML = "";
     content.style.animation = "none";
-    void content.offsetWidth; // force reflow
+    void content.offsetWidth;
     content.style.animation = "fadeInUp 0.5s ease";
 
     const s = steps[step];
 
-    const msg = document.createElement("p");
-    msg.className = "tease-message";
-    msg.textContent = s.message;
-    content.appendChild(msg);
-
     if (s.mega) {
-      // Giant button that takes up almost the whole page
       const btn = document.createElement("button");
       btn.className = "tease-btn mega";
-      btn.textContent = s.message;
+      btn.textContent = s.text;
       btn.addEventListener("click", () => {
         teaseCompleted = true;
         goToTask(6);
       });
-      content.innerHTML = "";
       content.appendChild(btn);
     } else if (s.runaway) {
-      // Runaway button!
+      // The AHHHH text IS the runaway button
       const btn = document.createElement("button");
       btn.className = "tease-btn";
-      btn.textContent = s.btn;
-      btn.style.position = "relative";
+      btn.textContent = s.text;
       btn.style.transition = "none";
 
       function runAway() {
-        const maxX = window.innerWidth - 200;
-        const maxY = window.innerHeight - 100;
-        const newX = Math.random() * maxX;
-        const newY = Math.random() * maxY;
+        const maxX = window.innerWidth - 250;
+        const maxY = window.innerHeight - 80;
+        const newX = Math.max(10, Math.random() * maxX);
+        const newY = Math.max(10, Math.random() * maxY);
         btn.style.position = "fixed";
         btn.style.left = newX + "px";
         btn.style.top = newY + "px";
@@ -787,25 +763,27 @@ function startTeaseSequence() {
 
       btn.addEventListener("mouseover", runAway);
       btn.addEventListener("touchstart", (e) => { e.preventDefault(); runAway(); });
-
       content.appendChild(btn);
 
-      // After 3 seconds, show the real button
+      // After 45 seconds, show helper button
       setTimeout(() => {
         const helpBtn = document.createElement("button");
         helpBtn.className = "tease-btn";
         helpBtn.textContent = "Hey, press here! 👋";
-        helpBtn.style.animation = "fadeInUp 0.6s ease, pulse 1.5s ease-in-out infinite";
+        helpBtn.style.animation = "fadeInUp 0.6s ease";
         helpBtn.addEventListener("click", () => {
+          // Remove the runaway button if it's fixed somewhere
+          btn.remove();
           step++;
           showStep();
         });
         content.appendChild(helpBtn);
-      }, 3000);
+      }, 45000);
     } else {
+      // Text IS the button
       const btn = document.createElement("button");
       btn.className = "tease-btn";
-      btn.textContent = s.btn;
+      btn.textContent = s.text;
       btn.addEventListener("click", () => {
         step++;
         showStep();
