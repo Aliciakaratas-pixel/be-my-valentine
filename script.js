@@ -380,7 +380,9 @@ function initTask3() {
     if (answer === correct) {
       feedback.textContent = "💗 You cracked the code! 🧀🌸";
       feedback.style.color = "#10b981";
-      setTimeout(() => goToTask(4), 2000);
+      // 🧀 CHEESE FIREWORK!
+      launchCheeseFirework();
+      setTimeout(() => goToTask(4), 3000);
     } else {
       feedback.textContent = "🔐 Not quite... check the clues again!";
       feedback.style.color = "#ef4444";
@@ -746,6 +748,45 @@ function launchConfetti() {
   }
 
   animate();
+}
+
+// ========== CHEESE FIREWORK 🧀 ==========
+function launchCheeseFirework() {
+  const cheeses = ["🧀", "🧀", "🧀", "🧈", "🫕", "🧀"];
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement("div");
+    el.textContent = cheeses[Math.floor(Math.random() * cheeses.length)];
+
+    const angle = (Math.PI * 2 * i) / 40 + (Math.random() - 0.5) * 0.5;
+    const distance = 150 + Math.random() * 250;
+    const endX = Math.cos(angle) * distance;
+    const endY = Math.sin(angle) * distance;
+    const size = 1.2 + Math.random() * 1.5;
+    const duration = 0.8 + Math.random() * 0.8;
+
+    el.style.cssText = `
+      position: fixed;
+      left: ${centerX}px;
+      top: ${centerY}px;
+      font-size: ${size}rem;
+      pointer-events: none;
+      z-index: 10000;
+      transition: all ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 1;
+    `;
+    document.body.appendChild(el);
+
+    // Trigger the firework burst
+    requestAnimationFrame(() => {
+      el.style.transform = `translate(${endX}px, ${endY}px) rotate(${Math.random() * 720}deg)`;
+      el.style.opacity = "0";
+    });
+
+    setTimeout(() => el.remove(), duration * 1000 + 200);
+  }
 }
 
 // ========== WINDOW RESIZE ==========
