@@ -695,10 +695,20 @@ function initTask6() {
 
 // ========== TASK NAVIGATION ==========
 let currentTask = 1;
+let teaseCompleted = false;
 
 function goToTask(num) {
+  // Intercept task 6 to show tease sequence first
+  if (num === 6 && !teaseCompleted) {
+    startTeaseSequence();
+    return;
+  }
+
   document.querySelector(".active-task")?.classList.remove("active-task");
   currentTask = num;
+
+  // Make sure we're on the adventure screen
+  showScreen("screen-adventure");
 
   const taskEl = document.getElementById(`task-${num}`);
   if (taskEl) {
@@ -716,6 +726,59 @@ function goToTask(num) {
       case 6: initTask6(); break;
     }
   }
+}
+
+// ========== TEASING SEQUENCE ==========
+function startTeaseSequence() {
+  showScreen("screen-tease");
+  const content = document.getElementById("tease-content");
+
+  const steps = [
+    { message: "Not so fast! 😏", btn: "Okay okay..." },
+    { message: "This time for real... okay okay, I'm ready! 😤", btn: "Let me see it!" },
+    { message: "AHHHH! 😱", btn: "PLEASE! 🥺" },
+    { message: "Okay my dear, I won't let you wait no more, hihi 💕", btn: null, mega: true },
+  ];
+
+  let step = 0;
+
+  function showStep() {
+    content.innerHTML = "";
+    content.style.animation = "none";
+    void content.offsetWidth; // force reflow
+    content.style.animation = "fadeInUp 0.5s ease";
+
+    const s = steps[step];
+
+    const msg = document.createElement("p");
+    msg.className = "tease-message";
+    msg.textContent = s.message;
+    content.appendChild(msg);
+
+    if (s.mega) {
+      // Giant button that takes up almost the whole page
+      const btn = document.createElement("button");
+      btn.className = "tease-btn mega";
+      btn.textContent = s.message;
+      btn.addEventListener("click", () => {
+        teaseCompleted = true;
+        goToTask(6);
+      });
+      content.innerHTML = "";
+      content.appendChild(btn);
+    } else {
+      const btn = document.createElement("button");
+      btn.className = "tease-btn";
+      btn.textContent = s.btn;
+      btn.addEventListener("click", () => {
+        step++;
+        showStep();
+      });
+      content.appendChild(btn);
+    }
+  }
+
+  showStep();
 }
 
 // ========== CONFETTI (stars, hearts, flowers – no party poppers) ==========
