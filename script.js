@@ -304,7 +304,11 @@ function initTask2() {
 const cipherLines = [
   "I LOVE YOU MY BABY",
   "BABY BELL",
-  "WE HAVE SO MUCH CHEESE",
+  "WE",
+  "HAVE",
+  "SO",
+  "MUCH",
+  "CHEESE",
   "GOODNESS",
 ];
 const cipherAnswer = cipherLines.join(" ");
@@ -400,9 +404,11 @@ function initTask3() {
     if (answer === correct) {
       feedback.textContent = "💗 You cracked the code! 🧀🌸";
       feedback.style.color = "#10b981";
-      // 🧀 CHEESE FIREWORK!
+      // 🧀 TRIPLE CHEESE FIREWORK!
       launchCheeseFirework();
-      setTimeout(() => goToTask(4), 3000);
+      setTimeout(() => launchCheeseFirework(), 800);
+      setTimeout(() => launchCheeseFirework(), 1600);
+      setTimeout(() => goToTask(4), 4500);
     } else {
       feedback.textContent = "🔐 Not quite... check the clues again!";
       feedback.style.color = "#ef4444";
